@@ -7,11 +7,6 @@
     <!-- Menggunakan Tailwind CSS untuk styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Gaya khusus untuk memastikan animasi berjalan mulus */
-        .slider-track {
-            transition: transform 0.5s ease-in-out;
-        }
-        
         /* Mencegah gambar terseret saat digeser (untuk mouse) */
         .slide-img {
             user-drag: none;
@@ -79,7 +74,6 @@
         </div>
         
         <p class="text-sm text-gray-500 text-center mt-4">
-            
         </p>
     </div>
 
@@ -87,31 +81,49 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const track = document.getElementById('sliderTrack');
-            const slides = track.children;
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             const dotsContainer = document.getElementById('dotsContainer');
             
+            let originalSlides = Array.from(track.children);
+            const originalLength = originalSlides.length;
+            
+            // Buat clone untuk slide pertama dan terakhir untuk efek infinity
+            const firstClone = originalSlides[0].cloneNode(true);
+            const lastClone = originalSlides[originalLength - 1].cloneNode(true);
+            
+            firstClone.id = 'first-clone';
+            lastClone.id = 'last-clone';
+            
+            // Tambahkan clone ke DOM
+            track.appendChild(firstClone);
+            track.insertBefore(lastClone, originalSlides[0]);
+            
+            const slides = Array.from(track.children);
             const totalSlides = slides.length;
-            let currentIndex = 0;
+            
+            let currentIndex = 1; // Mulai dari slide asli pertama (indeks 1 karena ada clone di 0)
             let autoSlideInterval;
+            let isTransitioning = false; // Mencegah klik ganda saat animasi berjalan
 
-            // Membuat titik indikator sesuai jumlah slide
-            for (let i = 0; i < totalSlides; i++) {
+            // Set posisi awal (tanpa animasi)
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+            // Membuat titik indikator sesuai jumlah slide asli
+            for (let i = 0; i < originalLength; i++) {
                 const dot = document.createElement('button');
                 dot.classList.add('w-3', 'h-3', 'rounded-full', 'transition-all', 'duration-300', 'focus:outline-none');
                 
-                // Set titik pertama sebagai aktif di awal
                 if (i === 0) {
                     dot.classList.add('bg-white', 'w-6');
                 } else {
                     dot.classList.add('bg-white/50', 'hover:bg-white/80');
                 }
                 
-                // Tambahkan event klik untuk setiap titik
                 dot.addEventListener('click', () => {
-                    goToSlide(i);
-                    resetAutoSlide(); // Reset timer saat diklik manual
+                    if (isTransitioning) return;
+                    goToSlide(i + 1); // Indeks asli ditambah 1 karena ada clone di awal
+                    resetAutoSlide();
                 });
                 
                 dotsContainer.appendChild(dot);
@@ -119,10 +131,17 @@
 
             const dots = dotsContainer.children;
 
-            // Fungsi untuk memperbarui tampilan titik indikator
             function updateDots() {
-                for (let i = 0; i < totalSlides; i++) {
-                    if (i === currentIndex) {
+                // Hitung indeks dot aktif yang sebenarnya
+                let activeDotIndex = currentIndex - 1;
+                if (currentIndex === 0) {
+                    activeDotIndex = originalLength - 1;
+                } else if (currentIndex === totalSlides - 1) {
+                    activeDotIndex = 0;
+                }
+
+                for (let i = 0; i < originalLength; i++) {
+                    if (i === activeDotIndex) {
                         dots[i].classList.remove('bg-white/50', 'hover:bg-white/80');
                         dots[i].classList.add('bg-white', 'w-6');
                     } else {
@@ -132,33 +151,52 @@
                 }
             }
 
-            // Fungsi utama untuk berpindah slide
             function goToSlide(index) {
+                if (isTransitioning) return;
+                isTransitioning = true;
                 currentIndex = index;
-                // Menggeser track sebesar 100% dari lebar tiap elemen
+                // Nyalakan kembali transisi animasi setiap berpindah
+                track.style.transition = 'transform 0.5s ease-in-out';
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
                 updateDots();
             }
 
-            // Event listener tombol navigasi
+            // Event listener kunci untuk membuat efek infinity mulus
+            track.addEventListener('transitionend', () => {
+                isTransitioning = false;
+                
+                // Jika sedang berada di slide clone pertama, lompat ke slide asli pertama diam-diam
+                if (slides[currentIndex].id === 'first-clone') {
+                    track.style.transition = 'none'; 
+                    currentIndex = 1; 
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }
+                // Jika sedang berada di slide clone terakhir, lompat ke slide asli terakhir diam-diam
+                if (slides[currentIndex].id === 'last-clone') {
+                    track.style.transition = 'none'; 
+                    currentIndex = originalLength; 
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }
+            });
+
             nextBtn.addEventListener('click', () => {
-                const nextIndex = (currentIndex + 1) % totalSlides;
-                goToSlide(nextIndex);
+                if (isTransitioning) return;
+                goToSlide(currentIndex + 1);
                 resetAutoSlide();
             });
 
             prevBtn.addEventListener('click', () => {
-                const prevIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-                goToSlide(prevIndex);
+                if (isTransitioning) return;
+                goToSlide(currentIndex - 1);
                 resetAutoSlide();
             });
 
-            // Fitur Geser Otomatis (Auto-play)
             function startAutoSlide() {
                 autoSlideInterval = setInterval(() => {
-                    const nextIndex = (currentIndex + 1) % totalSlides;
-                    goToSlide(nextIndex);
-                }, 5000); // Ganti gambar setiap 5000 ms (5 detik)
+                    if (!isTransitioning) {
+                        goToSlide(currentIndex + 1);
+                    }
+                }, 5000);
             }
 
             function resetAutoSlide() {
@@ -166,10 +204,8 @@
                 startAutoSlide();
             }
 
-            // Memulai auto-play saat halaman dimuat
             startAutoSlide();
 
-            // Opsional: Pause auto-slide saat kursor berada di atas slider
             const sliderContainer = track.parentElement;
             sliderContainer.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
             sliderContainer.addEventListener('mouseleave', startAutoSlide);
