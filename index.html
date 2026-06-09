@@ -1,10 +1,406 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Website Saya</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piala Dunia 2026 - Jadwal & Hasil</title>
+    <!-- Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Teko:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Teko', 'sans-serif'],
+                    },
+                    colors: {
+                        wc: {
+                            black: '#000000',
+                            dark: '#111111',
+                            card: '#1a1a1a',
+                            neonGreen: '#ccff00',
+                            neonPink: '#ff0055',
+                            neonPurple: '#6b00ff',
+                            neonCyan: '#00ffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(107, 0, 255, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 0, 85, 0.15), transparent 25%);
+            background-attachment: fixed;
+        }
+        
+        .tab-btn.active {
+            border-bottom: 3px solid #ccff00;
+            color: #ccff00;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #ff0055, #6b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccff00; 
+        }
+    </style>
 </head>
-<body>
-    <h1>Halo, Dunia!</h1>
-    <p>Ini adalah website pertama saya di GitHub Pages.</p>
+<body class="min-h-screen flex flex-col font-sans">
+
+    <!-- Header/Navbar -->
+    <nav class="bg-wc-dark/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <i class="ph-fill ph-trophy text-wc-neonGreen text-3xl"></i>
+                    <span class="font-display tracking-wide text-2xl font-bold uppercase">
+                        <span class="text-white">World Cup</span> 
+                        <span class="text-wc-neonGreen">2026</span>
+                    </span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6">
+                        <a href="#" class="text-wc-neonGreen px-3 py-2 rounded-md text-sm font-medium">Beranda</a>
+                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Tim</a>
+                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Grup</a>
+                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Stadion</a>
+                    </div>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button class="text-gray-300 hover:text-white focus:outline-none">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-wc-dark py-12 md:py-20 overflow-hidden border-b border-gray-800">
+        <div class="absolute inset-0 opacity-20">
+            <!-- Pattern background placeholder -->
+            <div class="absolute inset-0" style="background-image: repeating-linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%, #333), repeating-linear-gradient(45deg, #333 25%, #111 25%, #111 75%, #333 75%, #333); background-position: 0 0, 10px 10px; background-size: 20px 20px;"></div>
+        </div>
+        <div class="max-w-5xl mx-auto px-4 relative z-10 text-center">
+            <div class="flex justify-center gap-4 mb-4 text-4xl">
+                <span>🇨🇦</span>
+                <span>🇲🇽</span>
+                <span>🇺🇸</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-display font-bold uppercase tracking-widest mb-4">
+                Pusat <span class="text-wc-neonPink">Pertandingan</span>
+            </h1>
+            <p class="text-gray-400 max-w-xl mx-auto text-sm md:text-base">
+                Pantau terus jadwal lengkap, hasil skor terbaru, dan klasemen dari turnamen sepak bola terbesar di dunia: Amerika Serikat, Meksiko, dan Kanada.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8">
+        
+        <!-- Tabs Navigation -->
+        <div class="flex justify-center border-b border-gray-800 mb-8">
+            <button class="tab-btn active px-6 py-3 text-sm md:text-base font-medium text-gray-400 hover:text-white transition-colors" onclick="switchTab('jadwal')">
+                <i class="ph ph-calendar-blank inline-block mr-1"></i> Jadwal
+            </button>
+            <button class="tab-btn px-6 py-3 text-sm md:text-base font-medium text-gray-400 hover:text-white transition-colors" onclick="switchTab('hasil')">
+                <i class="ph ph-check-circle inline-block mr-1"></i> Hasil Pertandingan
+            </button>
+            <button class="tab-btn px-6 py-3 text-sm md:text-base font-medium text-gray-400 hover:text-white transition-colors" onclick="switchTab('klasemen')">
+                <i class="ph ph-table inline-block mr-1"></i> Klasemen Grup
+            </button>
+        </div>
+
+        <!-- TAB CONTENT: JADWAL -->
+        <div id="jadwal" class="tab-content active">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-display font-bold uppercase tracking-wider">Akan Datang</h2>
+                <select class="bg-wc-card border border-gray-700 text-white text-sm rounded-md focus:ring-wc-neonGreen focus:border-wc-neonGreen block p-2">
+                    <option>Semua Grup</option>
+                    <option>Grup A</option>
+                    <option>Grup B</option>
+                    <option>Grup C</option>
+                </select>
+            </div>
+
+            <!-- List Match (Jadwal) -->
+            <div class="space-y-4">
+                <!-- Match 1 -->
+                <div class="bg-wc-card border border-gray-800 rounded-xl p-4 md:p-6 hover:border-wc-neonGreen transition-colors flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="w-full md:w-1/4 text-center md:text-left">
+                        <span class="text-xs font-bold text-wc-neonPink uppercase tracking-wider bg-wc-neonPink/10 px-2 py-1 rounded">Grup A</span>
+                        <div class="text-gray-400 text-sm mt-2">Kamis, 11 Jun 2026</div>
+                        <div class="text-gray-300 text-xs mt-1"><i class="ph ph-map-pin mr-1"></i>Estadio Azteca, Mexico City</div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/4 flex justify-between items-center">
+                        <div class="flex flex-col items-center w-5/12">
+                            <span class="text-4xl md:text-5xl mb-2">🇲🇽</span>
+                            <span class="font-bold text-lg">Meksiko</span>
+                        </div>
+                        <div class="w-2/12 flex flex-col items-center">
+                            <span class="text-xl md:text-2xl font-display font-bold text-wc-neonGreen bg-wc-dark px-3 py-1 rounded-md">02:00</span>
+                            <span class="text-xs text-gray-500 mt-1">WIB</span>
+                        </div>
+                        <div class="flex flex-col items-center w-5/12">
+                            <span class="text-4xl md:text-5xl mb-2">🇨🇲</span>
+                            <span class="font-bold text-lg">Kamerun</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4 text-center md:text-right">
+                        <button class="bg-gray-800 hover:bg-gray-700 text-white text-sm py-2 px-4 rounded-full transition duration-300 w-full md:w-auto">
+                            Ingatkan Saya
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Match 2 -->
+                <div class="bg-wc-card border border-gray-800 rounded-xl p-4 md:p-6 hover:border-wc-neonGreen transition-colors flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="w-full md:w-1/4 text-center md:text-left">
+                        <span class="text-xs font-bold text-wc-neonCyan uppercase tracking-wider bg-wc-neonCyan/10 px-2 py-1 rounded">Grup B</span>
+                        <div class="text-gray-400 text-sm mt-2">Jumat, 12 Jun 2026</div>
+                        <div class="text-gray-300 text-xs mt-1"><i class="ph ph-map-pin mr-1"></i>BMO Field, Toronto</div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/4 flex justify-between items-center">
+                        <div class="flex flex-col items-center w-5/12">
+                            <span class="text-4xl md:text-5xl mb-2">🇨🇦</span>
+                            <span class="font-bold text-lg">Kanada</span>
+                        </div>
+                        <div class="w-2/12 flex flex-col items-center">
+                            <span class="text-xl md:text-2xl font-display font-bold text-wc-neonGreen bg-wc-dark px-3 py-1 rounded-md">06:00</span>
+                            <span class="text-xs text-gray-500 mt-1">WIB</span>
+                        </div>
+                        <div class="flex flex-col items-center w-5/12">
+                            <span class="text-4xl md:text-5xl mb-2">🇯🇵</span>
+                            <span class="font-bold text-lg">Jepang</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4 text-center md:text-right">
+                        <button class="bg-gray-800 hover:bg-gray-700 text-white text-sm py-2 px-4 rounded-full transition duration-300 w-full md:w-auto">
+                            Ingatkan Saya
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Match 3 -->
+                <div class="bg-wc-card border border-gray-800 rounded-xl p-4 md:p-6 hover:border-wc-neonGreen transition-colors flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="w-full md:w-1/4 text-center md:text-left">
+                        <span class="text-xs font-bold text-wc-neonPurple uppercase tracking-wider bg-wc-neonPurple/10 px-2 py-1 rounded">Grup C</span>
+                        <div class="text-gray-400 text-sm mt-2">Jumat, 12 Jun 2026</div>
+                        <div class="text-gray-300 text-xs mt-1"><i class="ph ph-map-pin mr-1"></i>MetLife Stadium, NY/NJ</div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/4 flex justify-between items-center">
+                        <div class="flex flex-col items-center w-5/12">
+                            <span class="text-4xl md:text-5xl mb-2">🇺🇸</span>
+                            <span class="font-bold text-lg">Amerika Serikat</span>
+                        </div>
+                        <div class="w-2/12 flex flex-col items-center">
+                            <span class="text-xl md:text-2xl font-display font-bold text-wc-neonGreen bg-wc-dark px-3 py-1 rounded-md">09:00</span>
+                            <span class="text-xs text-gray-500 mt-1">WIB</span>
+                        </div>
+                        <div class="flex flex-col items-center w-5/12">
+                            <span class="text-4xl md:text-5xl mb-2">🇮🇩</span>
+                            <span class="font-bold text-lg">Indonesia</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4 text-center md:text-right">
+                        <button class="bg-gray-800 hover:bg-gray-700 text-white text-sm py-2 px-4 rounded-full transition duration-300 w-full md:w-auto">
+                            Ingatkan Saya
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button class="text-wc-neonGreen hover:text-white underline decoration-dashed underline-offset-4 transition-colors">
+                    Lihat Seluruh Jadwal
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: HASIL -->
+        <div id="hasil" class="tab-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-display font-bold uppercase tracking-wider">Hasil Terbaru</h2>
+            </div>
+
+            <!-- List Match (Hasil) -->
+            <div class="space-y-4">
+                <!-- Result 1 -->
+                <div class="bg-wc-card border-l-4 border-l-wc-neonGreen border-y border-r border-y-gray-800 border-r-gray-800 rounded-r-xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-wc-neonGreen text-black text-xs font-bold px-3 py-1 rounded-bl-lg">Purna Waktu</div>
+                    
+                    <div class="w-full md:w-1/4 text-center md:text-left">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Grup F</span>
+                        <div class="text-gray-400 text-sm mt-1">Selasa, 9 Jun 2026</div>
+                        <div class="text-gray-300 text-xs mt-1"><i class="ph ph-video-camera mr-1 text-wc-neonPink"></i>Cuplikan Tersedia</div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/4 flex justify-between items-center">
+                        <div class="flex flex-col items-center w-4/12">
+                            <span class="text-4xl mb-1">🇦🇷</span>
+                            <span class="font-bold text-base">Argentina</span>
+                        </div>
+                        <div class="w-4/12 flex flex-col items-center justify-center">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl font-display font-bold score-box">3</span>
+                                <span class="text-gray-600">-</span>
+                                <span class="text-3xl font-display font-bold text-white">1</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center w-4/12">
+                            <span class="text-4xl mb-1">🇸🇦</span>
+                            <span class="font-bold text-base text-gray-400">Arab Saudi</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4 text-center md:text-right">
+                        <button class="text-gray-400 hover:text-white flex items-center justify-center md:justify-end w-full gap-2 text-sm transition-colors">
+                            Statistik <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result 2 -->
+                <div class="bg-wc-card border-l-4 border-l-wc-neonGreen border-y border-r border-y-gray-800 border-r-gray-800 rounded-r-xl p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-wc-neonGreen text-black text-xs font-bold px-3 py-1 rounded-bl-lg">Purna Waktu</div>
+                    
+                    <div class="w-full md:w-1/4 text-center md:text-left">
+                        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Grup E</span>
+                        <div class="text-gray-400 text-sm mt-1">Senin, 8 Jun 2026</div>
+                        <div class="text-gray-300 text-xs mt-1"><i class="ph ph-video-camera mr-1 text-wc-neonPink"></i>Cuplikan Tersedia</div>
+                    </div>
+                    
+                    <div class="w-full md:w-2/4 flex justify-between items-center">
+                        <div class="flex flex-col items-center w-4/12">
+                            <span class="text-4xl mb-1">🇫🇷</span>
+                            <span class="font-bold text-base text-gray-400">Prancis</span>
+                        </div>
+                        <div class="w-4/12 flex flex-col items-center justify-center">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl font-display font-bold text-white">2</span>
+                                <span class="text-gray-600">-</span>
+                                <span class="text-3xl font-display font-bold text-white">2</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center w-4/12">
+                            <span class="text-4xl mb-1">🇪🇸</span>
+                            <span class="font-bold text-base">Spanyol</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/4 text-center md:text-right">
+                        <button class="text-gray-400 hover:text-white flex items-center justify-center md:justify-end w-full gap-2 text-sm transition-colors">
+                            Statistik <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button class="bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded-lg transition duration-300">
+                    Muat Lebih Banyak
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: KLASEMEN (Placeholder) -->
+        <div id="klasemen" class="tab-content">
+            <div class="text-center py-12 bg-wc-card rounded-xl border border-gray-800">
+                <i class="ph ph-table text-6xl text-gray-600 mb-4 inline-block"></i>
+                <h3 class="text-xl font-bold mb-2">Klasemen Grup Belum Tersedia</h3>
+                <p class="text-gray-400 max-w-md mx-auto">Tabel klasemen akan diperbarui secara otomatis setelah pertandingan pertama babak penyisihan grup selesai dimainkan.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-wc-dark border-t border-gray-800 mt-auto py-8">
+        <div class="max-w-5xl mx-auto px-4 text-center md:flex md:justify-between md:items-center">
+            <div class="mb-4 md:mb-0 flex items-center justify-center md:justify-start gap-2">
+                <i class="ph-fill ph-soccer-ball text-2xl text-gray-500"></i>
+                <span class="font-bold text-gray-400">WC26 Live Portal</span>
+            </div>
+            <div class="text-gray-500 text-sm">
+                &copy; 2026 Portal Sepak Bola. Data yang ditampilkan adalah simulasi/mockup.
+            </div>
+            <div class="mt-4 md:mt-0 flex justify-center gap-4 text-xl text-gray-400">
+                <a href="#" class="hover:text-wc-neonGreen transition-colors"><i class="ph-fill ph-twitter-logo"></i></a>
+                <a href="#" class="hover:text-wc-neonPink transition-colors"><i class="ph-fill ph-instagram-logo"></i></a>
+                <a href="#" class="hover:text-wc-neonPurple transition-colors"><i class="ph-fill ph-youtube-logo"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script for Tabs -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected content
+            document.getElementById(tabId).classList.add('active');
+
+            // Add active class to clicked button
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
